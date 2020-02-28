@@ -47,7 +47,6 @@ class Login extends Component {
 						.then(data => {
 							localStorage.setItem('token', data.token);
 							this.getUser(data.token)
-							this.props.history.push('/')
 						})
 				} else {
 					this.setState({
@@ -74,6 +73,7 @@ class Login extends Component {
 							console.log(data);
 							
 							localStorage.setItem('username', data.username);
+							this.props.history.push('/')
 						})
 				} else {
 					this.setState({
