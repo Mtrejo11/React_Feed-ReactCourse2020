@@ -11,11 +11,9 @@ const NavbarComponent = (props) => {
 
             <div className="collapse navbar-collapse d-flex flex-row-reverse" id="navbarNav">
                 <ul className="navbar-nav">
-                    <li className="nav-item mr-5 h4">
-                        <span className='nav-link text-white text-uppercase'>{username}</span>
-                    </li>
+
                     <li className="nav-item mr-5 h5">
-                            <span className='nav-link text-white' onClick={()=> props.history.push('/personal')} >My Posts</span>
+                            <span className='nav-link text-white text-uppercase' onClick={()=> props.history.push('/personal')}  > {username}'s posts</span>
                     </li>
                     <li className="nav-item active">
                         <button type="button" className="btn btn-danger nav-link" onClick={props.logOutHandler}><span className='text-white'>Log out</span></button>

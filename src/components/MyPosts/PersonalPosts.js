@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Post from '../../components/Feed/Post'
 import { Helmet } from "react-helmet"
 import Navbar from '../Navbar/NavbarComponent'
+import EditablePost from '../EditablePost/EditablePost';
 
 const initStates = {
     title: '',
@@ -51,10 +52,16 @@ class PersonalPosts extends Component {
             .then(res => res.json())
             .then(data => {
                 console.log('received data: ', data);
-                const myPosts = data.filteredPosts.filter(element => {
+                const auxPost = data.filteredPosts.filter(element => {
                     return element.user === localStorage.getItem('username')
                 })
-                console.log('my posts:', myPosts);
+                let myPosts = []
+                auxPost.forEach(post => {
+                    myPosts.push({ ...post, selected: false })
+                });
+
+
+
 
                 this.setState({
                     posts: myPosts || []
@@ -73,26 +80,34 @@ class PersonalPosts extends Component {
     }
 
 
-    changeHandler = (event) => {
+    changeHandler = (event, index) => {
+        const change = event.target.value
+        const id = event.target.id
+        let postAux = this.state.posts
+        let singlePost = { ...postAux[index], [id]: change }
+        postAux[index] = singlePost
         this.setState({
-            [event.target.id]: event.target.value
+            posts: postAux
         })
     }
 
-    submitHandler = event => {
-        event.preventDefault()
+
+
+
+    updatePostHandler = (index) => {
 
         const post = {
-            title: this.state.title,
-            text: this.state.text,
-            image: this.state.image
+            _id: this.state.posts[index]._id,
+            title: this.state.posts[index].title,
+            text: this.state.posts[index].text,
+            image: this.state.posts[index].image
         }
 
         let config = {
-            method: "POST",
+            method: "PUT",
             headers: {
                 'Content-type': 'Application/json',
-                authorization: `Bearer ${this.state.token}`
+                'authorization': `Bearer ${this.state.token}`
             },
             body: JSON.stringify(post)
         }
@@ -103,28 +118,57 @@ class PersonalPosts extends Component {
             .then(res => res.json())
             .then(data => {
                 console.log('received from post: ', data);
-                let prevPosts = this.state.posts
-                prevPosts.push(data.post)
-                this.setState({
-                    posts: prevPosts || [],
-                    ...initStates
-                })
-
+                this.fetchData()
             })
+    }
+
+
+
+    handleEditable = (i) => {
+        let editablePosts = this.state.posts
+        for (let index = 0; index < editablePosts.length; index++) {
+            if (i === index) {
+                editablePosts[index].selected = !editablePosts[index].selected
+            } else {
+                editablePosts[index].selected = false
+
+            }
+        }
+        console.log(editablePosts);
+
+        this.setState({ posts: editablePosts })
     }
 
     render() {
         const postsComponents = this.state.posts.map((post, index) => {
 
-            return (<Post
-                key={index}
-                name={post.user}
-                likes={post.likes}
-                title={post.title}
-                text={post.text}
-                image={post.image}
-                onClick={() => this.likeHandler(index)}
-            />);
+            return post.selected ?
+
+                (<EditablePost
+                    handleEditable={() => this.handleEditable(index)}
+                    changeHandler={(event) => this.changeHandler(event, index)}
+                    editable={true}
+                    key={index}
+                    name={post.user}
+                    selected={post.selected}
+                    likes={post.likes}
+                    title={post.title}
+                    text={post.text}
+                    updateHandler={() => this.updatePostHandler(index)}
+                    image={post.image}
+                    onClick={() => this.likeHandler(index)}
+                />)
+                : (<Post
+                    handleEditable={() => this.handleEditable(index)}
+                    editable={true}
+                    key={index}
+                    name={post.user}
+                    likes={post.likes}
+                    title={post.title}
+                    text={post.text}
+                    image={post.image}
+                    onClick={() => this.likeHandler(index)}
+                />)
 
         });
 

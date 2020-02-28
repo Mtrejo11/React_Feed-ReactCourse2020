@@ -3,7 +3,7 @@ import './PostForm.css'
 
 const PostForm = (props) => {
     return (
-        <div className='d-flex flex-column align-items-center p-4 border border-secondary rounded-xlg m-5' >
+        <div className='d-flex bg-light flex-column align-items-center p-4 border border-secondary rounded-xlg m-5 shadow-sm' >
             <h1>New Post</h1>
 
             {/* <form className='d-flex flex-column align-items-end formContainer'>
@@ -27,19 +27,19 @@ const PostForm = (props) => {
             <form onSubmit={props.submitHandler}>
                 <div className="form-group">
                     <label htmlFor="exampleInputEmail1">Post title</label>
-                    <input type="text" className="form-control" id="title" placeholder="Enter title" value={props.title} onChange={props.changeHandler} />
+                    <input type="text" className="form-control" id="title" placeholder="Title" value={props.title} onChange={props.changeHandler} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="exampleInputEmail1">Post text</label>
-                    <input type="text" className="form-control" id="text" placeholder="Enter text" value={props.text} onChange={props.changeHandler} />
+                    <input type="text" className="form-control" id="text" placeholder="Text" value={props.text} onChange={props.changeHandler} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="exampleInputEmail1">Post image</label>
-                    <input type="text" className="form-control" id="image" placeholder="Paste url" value={props.img} onChange={props.changeHandler} />
+                    <input type="text" className="form-control" id="image" placeholder="URL" value={props.img} onChange={props.changeHandler} />
                 </div>
 
 
-                <button type="submit" className="btn btn-primary">Submit</button>
+                <button type="submit" className="btn btn-outline-primary">Share</button>
             </form>
         </div>
     )

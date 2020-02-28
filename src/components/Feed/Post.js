@@ -6,10 +6,21 @@ const Post = props => {
 		<article className="post card">
 
 			<header className="card-header">
-				<h3>
-					{props.title}
-				</h3>
-				<h5>Usuario: {props.name}</h5>
+				<div className='d-flex justify-content-between'>
+					<div>
+						<h3>
+							{props.title}
+						</h3>
+						<h5>Usuario: {props.name}</h5>
+					</div>
+
+					{
+						props.editable ? (
+
+							<button type='button' className='btn btn-outline-info' onClick={props.handleEditable} >Edit</button>
+						) : null
+					}
+				</div>
 			</header>
 
 			<main className="card-body">
