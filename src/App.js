@@ -7,6 +7,7 @@ import Register from './components/Register'
 import Login from './components/Login'
 import ReactFeed from './components/Feed/ReactFeed'
 import Splash from './components/Splash';
+import Personal from './components/MyPosts/PersonalPosts'
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
 
       <Route path="/register" component={Register} />
       <Route path="/login" component={Login} />
+      <Route path="/personal" component={Personal} />
+
     </Switch>
   );
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet'
 const initState = {
 	username: "",
@@ -46,7 +46,34 @@ class Login extends Component {
 					res.json()
 						.then(data => {
 							localStorage.setItem('token', data.token);
+							this.getUser(data.token)
 							this.props.history.push('/')
+						})
+				} else {
+					this.setState({
+						errorFlag: true,
+					})
+				}
+			})
+	}
+
+	getUser = (token) => {
+		let config = {
+			method: 'GET',
+			headers: {
+				'Content-type': 'Application/json',
+				'Authorization': `Bearer ${token}`
+			},
+		};
+
+		fetch('https://reactcourseapi.herokuapp.com/user/name', config)
+			.then(res => {
+				if (res.ok) {
+					res.json()
+						.then(data => {
+							console.log(data);
+							
+							localStorage.setItem('username', data.username);
 						})
 				} else {
 					this.setState({
@@ -93,7 +120,13 @@ class Login extends Component {
 										value={this.state.password} />
 								</label>
 							</div>
+
 							<button className="btn btn-primary" type="submit">Sign in</button>
+							<Link
+								to={'/register'}
+							>
+								<button className="btn btn-primary mt-2" type="submit">Sign up</button>
+							</Link>
 						</form>
 						{this.state.errorFlag &&
 							<div className="alert alert-dismissible alert-danger">

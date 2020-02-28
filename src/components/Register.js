@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 const initState = {
 	username: "",
@@ -102,6 +102,12 @@ class Register extends Component {
 								</label>
 							</div>
 							<button className="btn btn-primary" type="submit">Sign up</button>
+							<Link
+								to={'/login'}
+							>
+								<button className="btn btn-primary mt-2" type="submit">Sign in</button>
+							</Link>
+
 						</form>
 						{this.state.errorFlag &&
 							<div className="alert alert-dismissible alert-danger">

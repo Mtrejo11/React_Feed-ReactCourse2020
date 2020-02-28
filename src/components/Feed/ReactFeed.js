@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
 import Post from './Post'
 import { Helmet } from "react-helmet"
+import Navbar from '../Navbar/NavbarComponent'
+import PostForm from '../PostForm/PostForm';
 
+const initStates = {
+  title: '',
+  text: '',
+  image: '',
+}
 class ReactFeed extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      ...initStates,
       posts: [],
       token: localStorage.getItem('token')
     }
@@ -59,6 +67,47 @@ class ReactFeed extends Component {
     this.fetchData();
   }
 
+
+  changeHandler = (event) => {
+    this.setState({
+      [event.target.id]: event.target.value
+    })
+  }
+
+  submitHandler = event => {
+    event.preventDefault()
+
+    const post = {
+      title: this.state.title,
+      text: this.state.text,
+      image: this.state.image
+    }
+
+    let config = {
+      method: "POST",
+      headers: {
+        'Content-type': 'Application/json',
+        authorization: `Bearer ${this.state.token}`
+      },
+      body: JSON.stringify(post)
+    }
+
+
+
+    fetch('https://reactcourseapi.herokuapp.com/post', config)
+      .then(res => res.json())
+      .then(data => {
+        console.log('received from post: ', data);
+        let prevPosts = this.state.posts
+        prevPosts.push(data.post)
+        this.setState({
+          posts: prevPosts || [],
+          ...initStates
+        })
+
+      })
+  }
+
   render() {
     const postsComponents = this.state.posts.map((post, index) => {
 
@@ -80,12 +129,15 @@ class ReactFeed extends Component {
           <meta charSet="utf-8" />
           <title>React Feed</title>
         </Helmet>
-        <div className="container">
+
+        <Navbar logOutHandler={this.logOutHandler} />
+        <div className="container pt-5">
           <h1 className="display-3">ReactFeed</h1>
+
+          <PostForm {...this.state} changeHandler={this.changeHandler} submitHandler={this.submitHandler} />
 
           <div className="d-flex flex-row bd-highlight mb-3 justify-content-between border-bottom p-3" >
             <h2>Recent posts</h2>
-            <button type="button" class="btn btn-outline-danger" onClick={this.logOutHandler}>Log out</button>
           </div>
           <div className="posts">
             {postsComponents}
