@@ -72,7 +72,7 @@ class PersonalPosts extends Component {
 
     logOutHandler = () => {
         localStorage.clear()
-        window.location.reload()
+        this.props.history.push('/')
     }
 
     componentDidMount() {
