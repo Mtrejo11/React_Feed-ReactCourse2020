@@ -60,7 +60,7 @@ class ReactFeed extends Component {
 
   logOutHandler = () => {
     localStorage.clear()
-    this.props.history.push('/')
+    window.location.reload()
   }
 
   componentDidMount() {
