@@ -3,6 +3,7 @@ import Post from '../../components/Feed/Post'
 import { Helmet } from "react-helmet"
 import Navbar from '../Navbar/NavbarComponent'
 import EditablePost from '../EditablePost/EditablePost';
+import swal from 'sweetalert' 
 
 const initStates = {
     title: '',
@@ -122,6 +123,56 @@ class PersonalPosts extends Component {
             })
     }
 
+    deletePostHandler = index => {
+
+
+
+
+
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this post!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    const post = {
+                        _id: this.state.posts[index]._id,
+                    }
+
+                    let config = {
+                        method: "DELETE",
+                        headers: {
+                            'Content-type': 'Application/json',
+                            'authorization': `Bearer ${this.state.token}`
+                        },
+                        body: JSON.stringify(post)
+                    }
+
+
+
+                    fetch('https://reactcourseapi.herokuapp.com/post', config)
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log('received from post: ', data);
+                            swal("Your post has been deleted!", {
+                                icon: "success",
+                            })
+                            this.fetchData()
+                        })
+
+                } else {
+                    swal("Your post is safe!");
+                }
+            });
+
+
+
+    }
+
+
 
 
     handleEditable = (i) => {
@@ -154,6 +205,7 @@ class PersonalPosts extends Component {
                     likes={post.likes}
                     title={post.title}
                     text={post.text}
+                    handleDelete={() => this.deletePostHandler(index)}
                     updateHandler={() => this.updatePostHandler(index)}
                     image={post.image}
                     onClick={() => this.likeHandler(index)}
